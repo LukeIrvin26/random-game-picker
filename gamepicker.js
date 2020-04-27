@@ -19,7 +19,7 @@ fetch('https://api.rawg.io/api/games?page_size=1')
         console.log(data.results[0].name + ' ' + data.results[0].released);
       })
       .catch((err) => {
-        console.error('Bro your second call fucking sucks dude: ' + err);
+        console.error('Bro your second call sucks dude: ' + err);
       });
   })
   .catch((err) => {
