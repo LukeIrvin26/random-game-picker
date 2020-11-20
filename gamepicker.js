@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const open = require('open');
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
@@ -22,7 +23,7 @@ fetch('https://api.rawg.io/api/games?page_size=1', {
         return response.json();
       })
       .then((data) => {
-        console.log(data.results[0].name + ' ' + data.results[0].released);
+        open('https://rawg.io/games/' + data.results[0].slug);
       })
       .catch((err) => {
         console.error('Bro your second call sucks dude: ' + err);
