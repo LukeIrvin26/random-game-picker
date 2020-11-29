@@ -109,13 +109,11 @@ async function fetchRawgSlug(number) {
 }
 
 async function pickGame() {
-  //var whichDB = weightedRand([IGDB.weight, rawgIO.weight]);
-  var whichDB = 0;
+  var whichDB = weightedRand([IGDB.weight, rawgIO.weight]);
   if (whichDB === IGDB.id) {
     try {
       var selectionIndex = weightedRand(weights);
-      //var rating = weights[selectionIndex];
-      var rating = 0;
+      var rating = weights[selectionIndex];
       var twitchAuthToken = await authenticateTwitch();
       var count = await getCount(twitchAuthToken, rating);
       var offset = getRandomInt(1, count);
