@@ -12,9 +12,9 @@ const rawgIO = {
   weight: 25,
 };
 
-const twitchClientID = '[YOUR_CLIENT_ID_HERE]';
-const twitchClientSecret = '[YOUR_CLIENT_SECRET_HERE]';
-const weights = [1, 20, 40, 60, 80, 100];
+const twitchClientID = '[YOUR_CLIENT_ID]';
+const twitchClientSecret = '[YOUR_CLIENT_SECRET]';
+const weights = [0, 20, 40, 60, 80, 100];
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -28,6 +28,10 @@ function isEmptyObject(obj) {
 
 async function getIGDBGame(offset, rating, token) {
   try {
+    var query =
+      rating === 0
+        ? `fields *; where rating > ${rating} | rating = null; limit 1; offset ${offset};`
+        : `fields *; where rating >= ${rating}; limit 1; offset ${offset};`;
     var response = await axios({
       url: 'https://api.igdb.com/v4/games',
       method: 'POST',
@@ -36,7 +40,7 @@ async function getIGDBGame(offset, rating, token) {
         'Client-ID': twitchClientID,
         Authorization: `Bearer ${token}`,
       },
-      data: `fields *; where rating >= ${rating}; limit 1; offset ${offset};`,
+      data: query,
     });
     return response.data[0];
   } catch (err) {
@@ -105,12 +109,13 @@ async function fetchRawgSlug(number) {
 }
 
 async function pickGame() {
-  var whichDB = weightedRand([IGDB.weight, rawgIO.weight]);
-
+  //var whichDB = weightedRand([IGDB.weight, rawgIO.weight]);
+  var whichDB = 0;
   if (whichDB === IGDB.id) {
     try {
       var selectionIndex = weightedRand(weights);
-      var rating = weights[selectionIndex];
+      //var rating = weights[selectionIndex];
+      var rating = 0;
       var twitchAuthToken = await authenticateTwitch();
       var count = await getCount(twitchAuthToken, rating);
       var offset = getRandomInt(1, count);
