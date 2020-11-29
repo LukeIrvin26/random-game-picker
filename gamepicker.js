@@ -12,8 +12,9 @@ const rawgIO = {
   weight: 25,
 };
 
-const twitchClientID = '0mstfatfihg4u4l8owrvse0vxzwcpq';
-const twitchClientSecret = 'u3sgd1pwl1l61fp3dd7dsspbtxkxg7';
+const twitchClientID = '[YOUR_CLIENT_ID_HERE]';
+const twitchClientSecret = '[YOUR_CLIENT_SECRET_HERE]';
+const weights = [1, 20, 40, 60, 80, 100];
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -25,7 +26,7 @@ function isEmptyObject(obj) {
   return !Object.keys(obj).length;
 }
 
-async function getIGDBGame(id, token) {
+async function getIGDBGame(offset, rating, token) {
   try {
     var response = await axios({
       url: 'https://api.igdb.com/v4/games',
@@ -35,7 +36,7 @@ async function getIGDBGame(id, token) {
         'Client-ID': twitchClientID,
         Authorization: `Bearer ${token}`,
       },
-      data: `fields *; where id = ${id};`,
+      data: `fields *; where rating >= ${rating}; limit 1; offset ${offset};`,
     });
     return response.data[0];
   } catch (err) {
@@ -56,20 +57,20 @@ async function authenticateTwitch() {
   }
 }
 
-async function getMaxID(authToken) {
+async function getCount(authToken, rating) {
   try {
     const response = await axios({
-      url: 'https://api.igdb.com/v4/games',
+      url: 'https://api.igdb.com/v4/games/count',
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Client-ID': twitchClientID,
         Authorization: `Bearer ${authToken}`,
       },
-      data: 'fields *; sort id desc; limit 1;',
+      data: `where rating > ${rating};`,
     });
 
-    return response.data[0].id;
+    return response.data.count;
   } catch (err) {
     console.error(err);
   }
@@ -108,13 +109,15 @@ async function pickGame() {
 
   if (whichDB === IGDB.id) {
     try {
+      var selectionIndex = weightedRand(weights);
+      var rating = weights[selectionIndex];
       var twitchAuthToken = await authenticateTwitch();
-      var maxID = await getMaxID(twitchAuthToken);
-      var idToGet = getRandomInt(1, maxID);
-      var game = await getIGDBGame(idToGet, twitchAuthToken);
+      var count = await getCount(twitchAuthToken, rating);
+      var offset = getRandomInt(1, count);
+      var game = await getIGDBGame(offset, rating, twitchAuthToken);
       while (isEmptyObject(game)) {
-        idToGet = getRandomInt(1, maxID);
-        game = await getIGDBGame(idToGet, twitchAuthToken);
+        offset = getRandomInt(1, count);
+        game = await getIGDBGame(offset, rating, twitchAuthToken);
       }
 
       open(game.url);
