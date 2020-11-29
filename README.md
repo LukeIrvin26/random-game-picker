@@ -13,7 +13,7 @@ To start getting random games, do the following:
 4. [Sign up](https://dev.twitch.tv/login) for a Twitch account if you do not already have one, otherwise, login.
 5. [Enable Two Factor](https://www.twitch.tv/settings/security) auth on your Twitch account.
 6. [Register](https://dev.twitch.tv/console/apps/create) an application for your gamepicker app.
-   1. OAuth Redirect URLs can just be `http://localhost.
+   1. OAuth Redirect URLs can just be http://localhost.
    2. Category can be `Application Integration`
 7. Once registered, [manage](https://dev.twitch.tv/console/apps) your application you just created
 8. Generate a Client Secret.
