@@ -12,9 +12,9 @@ const rawgIO = {
   weight: 25,
 };
 
-const twitchClientID = '[YOUR_CLIENT_ID]';
-const twitchClientSecret = '[YOUR_CLIENT_SECRET]';
-const weights = [0, 20, 40, 60, 80, 100];
+const twitchClientID = '0mstfatfihg4u4l8owrvse0vxzwcpq';
+const twitchClientSecret = 'u3sgd1pwl1l61fp3dd7dsspbtxkxg7';
+const weights = [0, 40, 60, 70, 80, 90];
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
